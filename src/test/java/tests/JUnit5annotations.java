@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 
 import java.io.File;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -39,7 +40,8 @@ public class JUnit5annotations {
         String studentFirstName = "Mikita";
         String studentLastName = "Anisimau";
         String studentEmail = "m.anisimau@godeltech.com";
-        String studentPhoneNumber = "+48600231543";
+        String studentGender = "Male";
+        String studentPhoneNumber = "1234567890";
         String dayOfBirth = "12";
         String monthOfBirth = "June";
         String yearOfBirth = "1997";
@@ -67,12 +69,27 @@ public class JUnit5annotations {
         $("[id=subjectsInput]").setValue(studentSubject);
         $("[id=subjectsInput]").pressEnter();
         $(byText(studentHobbies)).click();
-        $("[id=uploadPicture]").uploadFile(new File("test.jp`g"));
+        $("[id=uploadPicture]").uploadFile(new File("test.jpg"));
         $("[id=currentAddress]").setValue(studentCurrentAddress);
         $("[id=state]").click();
         $(byText(studentState)).click();
         $("[id=city]").click();
         $(byText(studentCity)).click();
+
+        $("[id=submit]").click();
+
+        $(".modal-body").shouldHave(
+                text(String.join(" " ,studentFirstName, studentLastName)),
+                text(studentEmail),
+                text(studentGender),
+                text(studentPhoneNumber),
+                text(String.join(" ", dayOfBirth, (String.join(",",monthOfBirth,yearOfBirth )))),
+                text(studentSubject),
+                text(studentHobbies),
+                text("test.jpg"),
+                text(studentCurrentAddress),
+                text(String.join(" " ,studentState, studentCity))
+        );
 
 
 
