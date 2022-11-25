@@ -1,101 +1,77 @@
-package tests;
+package Tests;
 
 import com.codeborne.selenide.Configuration;
-import org.junit.jupiter.api.*;
+import com.codeborne.selenide.selector.ByText;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
-public class JUnit5annotations {
+public class PracticeForm {
 
+    String firstName = "Larysa";
+    String lastName ="Shornikava";
+    String email = "loryshornikova@gmail.com";
+    String mobileNumber = "1111111111111";
+    String currentAddress ="Homiel, Belarus";
     @BeforeAll
-     static void beforeAll(){
-        System.out.println("Start test scenario");
+    static void setup() {
         Configuration.baseUrl = "https://demoqa.com";
-        Configuration.browserSize = "1920x1080";
-        Configuration.holdBrowserOpen = true;
-    }
-
-    @AfterAll
-    static void afterAll(){
-        System.out.println("Test scenario finished");
-    }
-
-    @BeforeEach
-    void beforeEach(){
-        System.out.println("Test case started");
-    }
-
-    @AfterEach
-    void afterEach(){
-        System.out.println("Test case passed");
     }
 
     @Test
-    void successfulTest() throws InterruptedException {
-        System.out.println("Test case 1");
-        String studentFirstName = "Mikita";
-        String studentLastName = "Anisimau";
-        String studentEmail = "m.anisimau@godeltech.com";
-        String studentGender = "Male";
-        String studentPhoneNumber = "1234567890";
-        String dayOfBirth = "12";
-        String monthOfBirth = "June";
-        String yearOfBirth = "1997";
-        String studentSubject = "Computer Science";
-        String studentHobbies = "Music";
-        String studentCurrentAddress = "Warszawa, Sriodmeisce 1";
-        String studentState = "NCR";
-        String studentCity = "Noida";
 
-
+    void successfulSubmitForm() {
         open("/automation-practice-form");
+
         executeJavaScript("$('footer').remove()");
         executeJavaScript("$('#fixedban').remove()");
+        executeJavaScript("$('RightSide-Add').remove()");
 
-        $("[id=firstName]").setValue(studentFirstName);
-        $("[id=lastName]").setValue(studentLastName);
-        $("[id=userEmail]").setValue(studentEmail);
-        $("[for=gender-radio-1]").click();
-        $("[id=userNumber]").setValue(studentPhoneNumber);
+        $("[id=firstName]").setValue(firstName);
+        $("[id=lastName]").setValue(lastName);
+        $("[id=userEmail]").setValue(email);
+        $(new ByText("Female")).click();
 
-        $("[id=dateOfBirthInput]").click();
-        $(".react-datepicker__month-select").selectOption(monthOfBirth);
-        $(".react-datepicker__year-select").selectOption(yearOfBirth);
-        $(".react-datepicker__day.react-datepicker__day--0" + dayOfBirth).click();
-        $("[id=subjectsInput]").setValue(studentSubject);
-        $("[id=subjectsInput]").pressEnter();
-        $(byText(studentHobbies)).click();
-        $("[id=uploadPicture]").uploadFile(new File("test.jpg"));
-        $("[id=currentAddress]").setValue(studentCurrentAddress);
-        $("[id=state]").click();
-        $(byText(studentState)).click();
-        $("[id=city]").click();
-        $(byText(studentCity)).click();
+        //$(("[for=\"gender-radio-2\"]")).click();
 
-        $("[id=submit]").click();
+        $("[id=userNumber]").setValue(mobileNumber);
 
-        $(".modal-body").shouldHave(
-                text(String.join(" " ,studentFirstName, studentLastName)),
-                text(studentEmail),
-                text(studentGender),
-                text(studentPhoneNumber),
-                text(String.join(" ", dayOfBirth, (String.join(",",monthOfBirth,yearOfBirth )))),
-                text(studentSubject),
-                text(studentHobbies),
-                text("test.jpg"),
-                text(studentCurrentAddress),
-                text(String.join(" " ,studentState, studentCity))
-        );
+        $("#dateOfBirthInput").click();
+        $(".react-datepicker__month-select [value=\"1\"]").click();
+        $(".react-datepicker__year-select").selectOption("1984");
+        $(".react-datepicker__day--002").click();
+
+        $("#subjectsInput").sendKeys("English");
+        $ ("#subjectsInput").pressEnter();
+        $("[for=\"hobbies-checkbox-2\"]").click();
+        $("[for=\"hobbies-checkbox-3\"]").click();
+
+        $("#uploadPicture").uploadFile(new File("src/test/java/Tests/sova.jpg"));
+
+        $("#currentAddress").setValue(currentAddress);
+
+        $("#react-select-3-input").setValue("NCR").pressEnter();
+        $("#react-select-4-input").setValue("Delhi").pressEnter();
+
+        $("#submit").click();
+
+        //$(".modal-body").shouldHave(
+        // text (firstName + " " + lastName),
+        //text(email),
+        //text("Female"),
+        //text(mobileNumber),
+        //text("02 February,1984"),
+        //text("English"),
+        //text("Reading, Music"),
+        //text(currentAddress),
+        //text("NCR Delhi")
+        //);
 
 
-
-
+        System.out.println("Successful test");
 
     }
-
-
 }
